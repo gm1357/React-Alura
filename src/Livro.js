@@ -48,9 +48,6 @@ class FormularioLivros extends Component {
     };
 
     this.enviaForm = this.enviaForm.bind(this);
-    this.setAutorId = this.setAutorId.bind(this);
-    this.setPreco = this.setPreco.bind(this);
-    this.setTitulo = this.setTitulo.bind(this);
   }
 
   componentWillMount() {
@@ -89,25 +86,19 @@ class FormularioLivros extends Component {
     });
   }
 
-  setTitulo(evento) {
-    this.setState({ titulo: evento.target.value});
-  }
-
-  setPreco(evento) {
-    this.setState({ preco: evento.target.value});
-  }
-
-  setAutorId(evento) {
-    this.setState({ autorId: evento.target.value});
+  salvaAlteracao(nomeInput, evento) {
+    const campo = {};
+    campo[nomeInput] = evento.target.value;
+    this.setState(campo);
   }
 
   render() {
     return(
       <div className="pure-form pure-form-aligned">
         <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm}>
-          <InputCustomizado id="titulo" label="Título" type="text" name="titulo" value={this.state.titulo} onChange={this.setTitulo} />
-          <InputCustomizado id="preco" label="Preço" type="number" name="preco" value={this.state.preco} onChange={this.setPreco} />
-          <SelectCustomizado id="autorId" label="Autor" name="autorId" value={this.state.autorId} onChange={this.setAutorId} listaValores={this.state.listaAutores} />
+          <InputCustomizado id="titulo" label="Título" type="text" name="titulo" value={this.state.titulo} onChange={this.salvaAlteracao.bind(this, 'titulo')} />
+          <InputCustomizado id="preco" label="Preço" type="number" name="preco" value={this.state.preco} onChange={this.salvaAlteracao.bind(this, 'preco')} />
+          <SelectCustomizado id="autorId" label="Autor" name="autorId" value={this.state.autorId} onChange={this.salvaAlteracao.bind(this, 'autorId')} listaValores={this.state.listaAutores} />
           <BotaoSubmitCustomizado label="Gravar"/>
         </form>             
       </div>

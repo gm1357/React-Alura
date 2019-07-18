@@ -21,7 +21,7 @@ export default class SelectCustomizado extends Component {
   render() {
     return (
       <div className="pure-control-group">
-        <label for={ this.props.id }>{ this.props.label }</label>
+        <label htmlFor={ this.props.id }>{ this.props.label }</label>
         <select value={ this.props.value } name={ this.props.name } onChange={ this.props.onChange }>
           <option value="">Selecione</option>
           { 
