@@ -3,6 +3,7 @@ import $ from "jquery";
 import InputCustomizado from "./componentes/InputCustomizado";
 import BotaoSubmitCustomizado from "./componentes/BotaoSubmitCustomizado";
 import PubSub from "pubsub-js";
+import TratadorErros from './TratadorErros';
 
 class FormularioAutor extends Component {
 
@@ -34,8 +35,16 @@ class FormularioAutor extends Component {
         email: this.state.email,
         senha: this.state.senha
       }),
-      success: novaLista => PubSub.publish('atualiza-lista-autores', novaLista),
-      error: resposta => console.log("erro")
+      success: novaLista => {
+        PubSub.publish('atualiza-lista-autores', novaLista);
+        this.setState({nome: '', email: '', senha: ''});
+      },
+      error: resposta => {
+        if (resposta.status === 400) {
+          new TratadorErros().publicaErros(resposta.responseJSON);
+        }
+      },
+      beforeSend: () => PubSub.publish('limpa-erros', {})
     });
   }
 
@@ -105,17 +114,17 @@ export default class AutorBox extends Component {
 
   componentDidMount(){  
     $.ajax({
-        url:"http://localhost:8080/api/autores",
+        url: 'https://cdc-react.herokuapp.com/api/autores',
         dataType: 'json',
-        success:function(resposta){    
+        success: resposta => {    
           this.setState({lista:resposta});
-        }.bind(this)
+        }
       }
     );
 
-    PubSub.subscribe('atualiza-lista-autores', function(topico, novaLista) {
+    PubSub.subscribe('atualiza-lista-autores', (topico, novaLista) => {
       this.setState({ lista: novaLista });
-    }.bind(this));
+    });
   }
 
   atualizaListagem(novaLista) {
