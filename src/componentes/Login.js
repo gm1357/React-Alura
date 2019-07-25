@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 
 export default class Login extends Component {
 
-  constructor() {
-    super();
-    this.state = {msg: ''};
+  constructor(props) {
+    super(props);
+    let msgParam = props.location.state ? props.location.state.msg : '';
+    this.state = {msg: msgParam};
   }
 
   envia(event) {
