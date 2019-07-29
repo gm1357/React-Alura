@@ -4,11 +4,14 @@ import Timeline from './componentes/Timeline';
 
 class App extends Component {
   render() {
+    const { match: { params } } = this.props;
+    console.log(params.login);
+
     return (
     <div id="root">
       <div className="main">
         <Header/>
-        <Timeline/>
+        <Timeline login={params.login}/>
       </div>
     </div>
     );

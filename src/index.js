@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import './css/timeline.css';
 import './css/login.css';
 import './css/reset.css';
-import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch, Redirect, matchPath} from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
@@ -16,7 +16,7 @@ function PrivateRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('auth-token') !== null ? (
+        verificaAutorizacao() ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -31,12 +31,23 @@ function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
+function verificaAutorizacao() {
+  const history = createBrowserHistory();
+  const match = matchPath(history.location.pathname, {path: '/timeline/:login'});
+
+  const privateRoute = match === null;
+  if (privateRoute && localStorage.getItem('auth-token') === null) {
+      return false
+  }
+  return true
+}
+
 ReactDOM.render(
   <Router history={history}>
     <Switch> 
       <Route exact path="/" component={Login} />
       <Route path="/logout" component={Logout} />
-      <PrivateRoute path="/timeline" component={App} />
+      <PrivateRoute path="/timeline/:login?" component={App} />
     </Switch>
   </Router>,
   document.getElementById('root')
